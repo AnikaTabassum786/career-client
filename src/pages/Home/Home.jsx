@@ -1,9 +1,16 @@
 import React from 'react';
+import HotJobs from './HotJobs';
+
+ 
 
 const Home = () => {
+
+ 
+
     return (
         <div>
-            Home
+            
+            <HotJobs></HotJobs>
         </div>
     );
 };
