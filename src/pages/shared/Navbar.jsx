@@ -3,27 +3,40 @@ import { NavLink } from 'react-router';
 import { AuthContext } from '../../context/AuthContext/AuthContext';
 
 const Navbar = () => {
-    const {user,signOutUser} = use(AuthContext)
+    const { user, signOutUser } = use(AuthContext)
 
-    const handleSignOut=()=>{
+    const handleSignOut = () => {
         signOutUser()
-        .then(()=>{
-            console.log('Sign Out User')
-        })
-        .catch((error)=>{
-            console.log(error)
-        })
+            .then(() => {
+                console.log('Sign Out User')
+            })
+            .catch((error) => {
+                console.log(error)
+            })
     }
 
     const links = <>
+
         <li><NavLink to='/' className={({ isActive }) =>
             isActive ? "active" : ""
         }>Home</NavLink></li>
+
+         {/* Role is applicant. Check Role */}
+
         {
-            user && 
-             <li><NavLink to='/myApplication' className={({ isActive }) =>
-            isActive ? "active" : ""
-        }>My Application</NavLink></li>
+            user &&
+            <li><NavLink to='/myApplication' className={({ isActive }) =>
+                isActive ? "active" : ""
+            }>My Application</NavLink></li>
+        }
+
+        {/* Role is Recruiter. Check Role */}
+
+        {
+            user &&
+            <li><NavLink to='/addJob' className={({ isActive }) =>
+                isActive ? "active" : ""
+            }>Add Job</NavLink></li>
         }
 
     </>
@@ -49,11 +62,11 @@ const Navbar = () => {
             </div>
             <div className="navbar-end">
                 {
-                    user? <button onClick={handleSignOut} className='btn'>Sign Out</button>:
-                    <>
-                    <NavLink to='/register' className='btn'>Register</NavLink>
-                    <NavLink to='/login' className='btn'>Login</NavLink>
-                    </>
+                    user ? <button onClick={handleSignOut} className='btn'>Sign Out</button> :
+                        <>
+                            <NavLink to='/register' className='btn'>Register</NavLink>
+                            <NavLink to='/login' className='btn'>Login</NavLink>
+                        </>
                 }
             </div>
         </div>
