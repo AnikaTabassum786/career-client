@@ -1,6 +1,9 @@
 import React from 'react';
+import useAuth from '../../hooks/useAuth';
 
 const AddJob = () => {
+
+    const {user} = useAuth()
 
     const handleAddJob=(e)=>{
          e.preventDefault();
@@ -8,7 +11,24 @@ const AddJob = () => {
          const form = e.target;
          const formData = new FormData(form)
          const data = Object.fromEntries(formData.entries());
-         console.log(data)
+
+        //  Process Salary
+         const {min,max,currency, ...newJob} = data;
+         newJob.salaryRange =  {min,max,currency}
+
+
+        //  Process Requirements
+
+        //  console.log(typeof(newJob.requirements))
+         const prevRequirements = newJob.requirements.split(',').map(req => req.trim());
+        //  console.log(prevRequirements)
+         newJob.requirements = prevRequirements
+
+        //  Process Responsibility
+        const prevResponsibility = newJob.responsibilities.split(',').map(res =>res.trim());
+        newJob.responsibilities  = prevResponsibility
+
+         console.log(newJob)
 
     }
 
@@ -115,7 +135,7 @@ const AddJob = () => {
 
                     <label className="label">HR Email</label>
                     <input type="email" name='hr_email' 
-                    // defaultValue={user.email} 
+                     defaultValue={user.email} 
                      className="input" placeholder="HR Email" />
                 </fieldset>
 
