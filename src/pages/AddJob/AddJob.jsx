@@ -1,42 +1,58 @@
 import React from 'react';
 import useAuth from '../../hooks/useAuth';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const AddJob = () => {
 
-    const {user} = useAuth()
+    const { user } = useAuth()
 
-    const handleAddJob=(e)=>{
-         e.preventDefault();
+    const handleAddJob = (e) => {
+        e.preventDefault();
 
-         const form = e.target;
-         const formData = new FormData(form)
-         const data = Object.fromEntries(formData.entries());
+        const form = e.target;
+        const formData = new FormData(form)
+        const data = Object.fromEntries(formData.entries());
 
         //  Process Salary
-         const {min,max,currency, ...newJob} = data;
-         newJob.salaryRange =  {min,max,currency}
+        const { min, max, currency, ...newJob } = data;
+        newJob.salaryRange = { min, max, currency }
 
 
         //  Process Requirements
 
         //  console.log(typeof(newJob.requirements))
-         const prevRequirements = newJob.requirements.split(',').map(req => req.trim());
+        const prevRequirements = newJob.requirements.split(',').map(req => req.trim());
         //  console.log(prevRequirements)
-         newJob.requirements = prevRequirements
+        newJob.requirements = prevRequirements
 
         //  Process Responsibility
-        const prevResponsibility = newJob.responsibilities.split(',').map(res =>res.trim());
-        newJob.responsibilities  = prevResponsibility
+        const prevResponsibility = newJob.responsibilities.split(',').map(res => res.trim());
+        newJob.responsibilities = prevResponsibility
 
-         console.log(newJob)
+        console.log(newJob)
 
+        axios.post('http://localhost:3000/jobs', newJob)
+            .then(res => {
+                console.log(res)
+                if (res.data.insertedId) {
+                    Swal.fire({
+                        title: "Good job!",
+                        text: "You Added a Job Successfully!",
+                        icon: "success"
+                    });
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 
     return (
         <div>
             Add a Job
-            <form 
-            onSubmit={handleAddJob}
+            <form
+                onSubmit={handleAddJob}
             >
                 <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
                     <legend className="fieldset-legend">Page details</legend>
@@ -48,39 +64,39 @@ const AddJob = () => {
                     <input type="text" name='company' className="input" placeholder="Company Name" />
 
                     <label className="label">Location</label>
-                    <input type="text"  name='location' className="input" placeholder="Company Location" />
+                    <input type="text" name='location' className="input" placeholder="Company Location" />
 
                     <label className="label">Company Logo</label>
-                    <input type="text"  name='company_logo' className="input" placeholder="Company Logo" />
+                    <input type="text" name='company_logo' className="input" placeholder="Company Logo" />
                 </fieldset>
 
-                    <fieldset className="fieldset">
-                        <legend className="fieldset-legend">Job Type</legend>
-                        <div className="filter">
-                            <input className="btn filter-reset" type="radio" name="jobType" aria-label="All" />
-                            <input className="btn" type="radio" name="jobType" value='On-site' aria-label="On-Site" />
-                            <input className="btn" type="radio" name="jobType" value='Remote' aria-label="Remote" />
-                            <input className="btn" type="radio" name="jobType" value='Hybrid' aria-label="Hybrid" />
-                        </div>
-                    </fieldset>
+                <fieldset className="fieldset">
+                    <legend className="fieldset-legend">Job Type</legend>
+                    <div className="filter">
+                        <input className="btn filter-reset" type="radio" name="jobType" aria-label="All" />
+                        <input className="btn" type="radio" name="jobType" value='On-site' aria-label="On-Site" />
+                        <input className="btn" type="radio" name="jobType" value='Remote' aria-label="Remote" />
+                        <input className="btn" type="radio" name="jobType" value='Hybrid' aria-label="Hybrid" />
+                    </div>
+                </fieldset>
 
 
-                    <fieldset className="fieldset">
-                        <legend className="fieldset-legend">Job Category</legend>
-                        <select  defaultValue="Job Category" name='category' className="select">
-                            <option disabled={true}>Pick a color</option>
-                            <option>Engineering</option>
-                            <option>Marketing</option>
-                            <option>Finance</option>
-                        </select>
+                <fieldset className="fieldset">
+                    <legend className="fieldset-legend">Job Category</legend>
+                    <select defaultValue="Job Category" name='category' className="select">
+                        <option disabled={true}>Pick a color</option>
+                        <option>Engineering</option>
+                        <option>Marketing</option>
+                        <option>Finance</option>
+                    </select>
 
-                    </fieldset>
+                </fieldset>
 
-                    <fieldset className="fieldset">
-                        <legend className="fieldset-legend">Application Deadline</legend>
-                        <input type="date"  name='deadline' className="input" />
+                <fieldset className="fieldset">
+                    <legend className="fieldset-legend">Application Deadline</legend>
+                    <input type="date" name='deadline' className="input" />
 
-                    </fieldset>
+                </fieldset>
 
                 <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
                     <legend className="fieldset-legend">Salary Range</legend>
@@ -127,20 +143,20 @@ const AddJob = () => {
                     <textarea className="textarea" name='responsibilities' placeholder="Responsibilities (separate by comma)"></textarea>
                 </fieldset>
 
-                  <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+                <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
                     <legend className="fieldset-legend">HR Related Info</legend>
 
                     <label className="label">HR Name</label>
                     <input type="text" name='hr_name' className="input" placeholder="HR Name" />
 
                     <label className="label">HR Email</label>
-                    <input type="email" name='hr_email' 
-                     defaultValue={user.email} 
-                     className="input" placeholder="HR Email" />
+                    <input type="email" name='hr_email'
+                        defaultValue={user.email}
+                        className="input" placeholder="HR Email" />
                 </fieldset>
 
- <input type="submit" className='btn' value="Add Job" />
-               
+                <input type="submit" className='btn' value="Add Job" />
+
             </form>
         </div>
     );
