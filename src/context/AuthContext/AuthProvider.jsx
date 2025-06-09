@@ -34,6 +34,10 @@ const AuthProvider = ({ children }) => {
 
             if(currentUser?.email){
                 const userData = {email:currentUser.email};
+                
+                // localStorage
+
+                /* 
                 axios.post('http://localhost:3000/jwt',userData)
                 .then(res=>{
 
@@ -44,6 +48,18 @@ const AuthProvider = ({ children }) => {
                     localStorage.setItem('Token',token)
                 })
                 .catch(error => console.log(error))
+                */
+
+                //http cookie
+
+                axios.post('http://localhost:3000/jwt',userData,{
+                    withCredentials:true
+                })
+                .then(res =>{
+                    console.log(res.data)
+                })
+                .catch(error => console.log(error))
+
             }
 
             console.log('user in auth state', currentUser)
