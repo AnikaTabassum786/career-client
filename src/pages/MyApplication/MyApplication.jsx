@@ -7,13 +7,20 @@ import useAuth from '../../hooks/useAuth';
 
 
 const MyApplication = () => {
-  const {user} = useAuth()
+    const { user } = useAuth()
+    console.log('token firebase token', user.accessToken)
+
     return (
         <div>
             My Application
             <ApplicationStat></ApplicationStat>
             <Suspense fallback={'Loading your applications'}>
-                <ApplicationList myApplicationsPromise={myApplicationsPromise(user.email)}></ApplicationList>
+                {/* Cookie */}
+
+                {/* <ApplicationList myApplicationsPromise={myApplicationsPromise(user.email)}></ApplicationList> */}
+
+                {/* firebase admin */}
+                <ApplicationList myApplicationsPromise={myApplicationsPromise(user.email,user.accessToken)}></ApplicationList>
             </Suspense>
         </div>
     );
